@@ -3,38 +3,31 @@ import random
 import time
 from datetime import datetime
 
-# Genera los datos sintéticos aleatoriamente
-def generate_synthetic_data(generator_id, measure_id):
+# Función que genera los datos sintéticos aleatoriamente
+def generate_synthetic_data():
     # Generar producción energética aleatoria
     production = round(random.uniform(0, 5), 2)
-    # Hacer que el resultado sea erróneo con una probabilidad del 10%
+    # Hacer que el resultado sea negativo con una probabilidad del 10%
     if random.random() < 0.1:
         production *= -1
+    # Hacer que el resultado sea mayor que 5 con una probabilidad del 10%
+    if random.random() < 0.1:
+        production = round(production + random.uniform(5, 10), 2)
     
     return {
-        "generator_id": generator_id,
-        "location": {
-            "latitude": round(-1.11 * generator_id, 6),
-            "longitude": round(1.11 * generator_id, 6)
-            },
-        "measure": {
-            measure_id: {
-                "production": production,
-                "state": bool(random.getrandbits(1)),
-                "datetime": str(datetime.now())
-                }
-            }
+        "production": production,
+        "state": bool(random.getrandbits(1)),
+        "datetime": str(datetime.now())
         }
 
 
 # Función principal
 def main():
-    i = 0
     while True:
         # Se repite para los 10 generadores
         for generator_id in range(1,11):
             # Obtiene los datos sintéticos
-            data = generate_synthetic_data(generator_id, i)
+            data = generate_synthetic_data()
             # Debug para visualizar los datos
             print(f"Enviando datos: {data}")
             
@@ -53,8 +46,8 @@ def main():
 
         # Espera 10 segundos antes de generar nuevos datos
         time.sleep(10)  
-        i += 1
 
 
+# Llamada a la función principal al iniciar el programa
 if __name__ == "__main__":
     main()
